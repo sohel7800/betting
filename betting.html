@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Betting App Prototype</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 20px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    .button {
+      margin: 10px 0;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .button:hover {
+      background-color: #0056b3;
+    }
+
+    input, select {
+      padding: 10px;
+      font-size: 16px;
+      margin: 10px 0;
+      width: 80%;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .result {
+      margin: 20px 0;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .success {
+      color: green;
+    }
+
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <!-- Login Page -->
+  <div class="container" id="login-container">
+    <h1>Login</h1>
+    <form id="login-form">
+      <input type="text" id="username" placeholder="Enter your username" required>
+      <button type="submit" class="button">Login</button>
+    </form>
+  </div>
+
+  <!-- Betting Page -->
+  <div class="container hidden" id="betting-container">
+    <h1>Welcome, <span id="user-name"></span>!</h1>
+    <h2>Place Your Bet</h2>
+    <form id="bet-form">
+      <select id="event-select">
+        <option value="team1">Team 1 vs Team 2 - Bet on Team 1</option>
+        <option value="team2">Team 1 vs Team 2 - Bet on Team 2</option>
+      </select>
+      <input type="number" id="bet-amount" placeholder="Enter bet amount" min="1" required>
+      <button type="submit" class="button">Place Bet</button>
+    </form>
+    <p class="result hidden" id="bet-result"></p>
+    <button class="button" id="logout">Logout</button>
+  </div>
+
+  <script>
+    // Elements
+    const loginContainer = document.getElementById("login-container");
+    const bettingContainer = document.getElementById("betting-container");
+    const loginForm = document.getElementById("login-form");
+    const usernameInput = document.getElementById("username");
+    const userNameDisplay = document.getElementById("user-name");
+    const betForm = document.getElementById("bet-form");
+    const eventSelect = document.getElementById("event-select");
+    const betAmountInput = document.getElementById("bet-amount");
+    const betResult = document.getElementById("bet-result");
+    const logoutButton = document.getElementById("logout");
+
+    // Login Functionality
+    loginForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const username = usernameInput.value;
+      if (username.trim() !== "") {
+        userNameDisplay.textContent = username;
+        loginContainer.classList.add("hidden");
+        bettingContainer.classList.remove("hidden");
+      } else {
+        alert("Please enter a valid username.");
+      }
+    });
+
+    // Betting Functionality
+    betForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const selectedEvent = eventSelect.value;
+      const betAmount = parseInt(betAmountInput.value, 10);
+
+      if (betAmount > 0) {
+        const randomOutcome = Math.random() > 0.5 ? "team1" : "team2";
+        if (selectedEvent === randomOutcome) {
+          betResult.textContent = `You won! You bet $${betAmount} and doubled your money!`;
+          betResult.className = "result success";
+        } else {
+          betResult.textContent = `You lost! You bet $${betAmount}. Better luck next time.`;
+          betResult.className = "result error";
+        }
+        betResult.classList.remove("hidden");
+      } else {
+        alert("Please enter a valid bet amount.");
+      }
+    });
+
+    // Logout Functionality
+    logoutButton.addEventListener("click", () => {
+      bettingContainer.classList.add("hidden");
+      loginContainer.classList.remove("hidden");
+      usernameInput.value = "";
+      betAmountInput.value = "";
+      betResult.classList.add("hidden");
+    });
+  </script>
+</body>
+</html>
